@@ -52,7 +52,7 @@ def test_filter_name(apiclient, coursefactory):
 def test_new_course(apiclient):
     data = {'name': 'new course'}
     url = '/api/v1/courses/'
-    response = apiclient.get(url, data = data, format = 'json')
+    response = apiclient.post(url, data = data, format = 'json')
     assert response.status_code == 201
     assert response.data ['name'] == 'new course'
 @pytest.mark.django_db
@@ -60,7 +60,7 @@ def test_update_course(apiclient, coursefactory):
     course = coursefactory(name = 'course1')
     data = {'name': 'update course1'}
     url = f'/api/v1/courses/{course.id}'
-    response = apiclient.get(url, data = data, format = 'json')
+    response = apiclient.patch(url, data = data, format = 'json')
     assert response.status_code == 200
     assert response.data ['name'] == 'update course'
 @pytest.mark.django_db
