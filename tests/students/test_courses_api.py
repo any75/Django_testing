@@ -4,7 +4,7 @@ from rest_framework.test import APIClient
 from students.models import Course
 @pytest.fixture
 def apiclient():
-    return APIClient
+    return APIClient()
 @pytest.fixture
 def coursefactory():
     def factory(**kwargs):
@@ -41,13 +41,13 @@ def test_filter_id(apiclient, coursefactory):
     assert response.data[0] ['id'] == course1.id
 @pytest.mark.django_db
 def test_filter_name(apiclient, coursefactory):
-    course1 = coursefactory(name = 'course 1', id = 1)
+    coursefactory(name = 'course 1', id = 1)
     course2 = coursefactory(name = 'course 2', id = 2)
     url = '/api/v1/courses/'
     response = apiclient.get(url, data = {'name': course2.name})
     assert response.status_code == 200
     assert len(response.data) == 1
-    assert response.data[0] ['name'] == course1.name
+    assert response.data[0] ['name'] == course2.name
 @pytest.mark.django_db
 def test_new_course(apiclient):
     data = {'name': 'new course'}
@@ -68,6 +68,5 @@ def test_delete_course(apiclient, coursefactory):
     course = coursefactory()
     url = f'/api/v1/courses/{course.id}'
     response = apiclient.delete(url)
-    aasert response.status_code == 204
+    assert response.status_code == 204
     
-
